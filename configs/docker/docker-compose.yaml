@@ -1,0 +1,21 @@
+version: '3.3'
+
+services:
+
+    python-stack:
+        container_name: ${IMAGE_NAME}-${CONTAINER_ID}
+        image: ${IMAGE_NAME}:${IMAGE_TAG}
+
+        build:
+            context: ../../
+            dockerfile: ./configs/docker/Dockerfile
+            args:
+              PYTHON_VERSION: ${PYTHON_VERSION}
+              DEBIAN_VERSION: ${DEBIAN_VERSION}
+              POETRY_VERSION: ${POETRY_VERSION}
+
+        ports:
+            - '127.0.0.1:5000:5000'
+
+        volumes:
+            - ../../:/usr/user/workdir
