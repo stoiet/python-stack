@@ -8,6 +8,7 @@ ENV HOME /usr/user
 ENV BIN_PATH /usr/bin
 ENV XDG_CONFIG_HOME ${HOME}/.config
 ENV PATH ${HOME}/.local/bin:${PATH}
+ENV PYTHONDONTWRITEBYTECODE 1
 
 RUN useradd -d ${HOME} -m -s /bin/bash -r ${USER}
 

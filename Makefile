@@ -51,6 +51,9 @@ check-poetry: ## Check Poetry version
 install: ## Install project dependencies
 	$(call docker_compose_run) bash -c "poetry env use /usr/local/bin/python && poetry install"
 
+test: ## Run test cases
+	$(call docker_compose_run) bash -c "poetry run pytest"
+
 
 define docker_compose
 	$(call docker_compose_file_variables) docker-compose --file $(DOCKER_COMPOSE_FILE) --project-name $(IMAGE_NAME)
