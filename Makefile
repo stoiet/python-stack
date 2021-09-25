@@ -33,6 +33,19 @@ bash: ## Run bash shell
 	$(call docker_compose_run) bash
 
 
+## Check commands:
+
+check-python: ## Check Python version
+	$(eval CONTAINER_PYTHON_VERSION := $(call check_python))
+	$(eval EXPECTED_PYTHON_VERSION := $(PYTHON_VERSION))
+	@if [ "$(CONTAINER_PYTHON_VERSION)" == "$(EXPECTED_PYTHON_VERSION)" ]; then echo "Ok" && exit 0; else echo "Error" && exit 1; fi
+
+check-poetry: ## Check Poetry version
+	$(eval CONTAINER_POETRY_VERSION := $(call check_poetry))
+	$(eval EXPECTED_POETRY_VERSION := $(POETRY_VERSION))
+	@if [ "$(CONTAINER_POETRY_VERSION)" == "$(EXPECTED_POETRY_VERSION)" ]; then echo "Ok" && exit 0; else echo "Error" && exit 1; fi
+
+
 define docker_compose
 	$(call docker_compose_file_variables) docker-compose --file $(DOCKER_COMPOSE_FILE) --project-name $(IMAGE_NAME)
 endef
@@ -48,4 +61,12 @@ define docker_compose_file_variables
 	DEBIAN_VERSION=$(DEBIAN_VERSION) \
 	PYTHON_VERSION=$(PYTHON_VERSION) \
 	POETRY_VERSION=$(POETRY_VERSION)
+endef
+
+define check_python
+	$(shell sh -c "docker run --user user --rm --name $(IMAGE_NAME)$(CONTAINER_ID) $(IMAGE_NAME):$(IMAGE_TAG) python --version | cut -d' ' -f2")
+endef
+
+define check_poetry
+	$(shell sh -c "docker run --user user --rm --name $(IMAGE_NAME)$(CONTAINER_ID) $(IMAGE_NAME):$(IMAGE_TAG) poetry --version | cut -d' ' -f3")
 endef
