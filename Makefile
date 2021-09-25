@@ -55,7 +55,7 @@ test: ## Run test cases
 	$(call docker_compose_run) bash -c "poetry run pytest"
 
 pylint: ## Run pylint
-	$(call docker_compose_run) bash -c "poetry run pylint src test"
+	$(call docker_compose_run) bash -c "poetry run pylint src"
 
 
 define docker_compose
