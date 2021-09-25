@@ -1,0 +1,4 @@
+cache-dir = "/usr/user/.cache"
+
+virtualenvs.create = true
+virtualenvs.in-project = true

@@ -6,12 +6,17 @@ ENV USER user
 ENV WORKDIR /usr/user/workdir
 ENV HOME /usr/user
 ENV BIN_PATH /usr/bin
+ENV XDG_CONFIG_HOME ${HOME}/.config
+ENV PATH ${HOME}/.local/bin:${PATH}
 
 RUN useradd -d ${HOME} -m -s /bin/bash -r ${USER}
 
 USER ${USER}
 
-RUN mkdir ${WORKDIR}
+RUN mkdir ${WORKDIR} && \
+    mkdir -p ${XDG_CONFIG_HOME}/pypoetry
+
+COPY --chown=user ./configs/poetry/* ${XDG_CONFIG_HOME}/pypoetry/
 
 ARG POETRY_VERSION
 RUN python3 -m pip install --user --upgrade pip && \
