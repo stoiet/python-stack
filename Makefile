@@ -46,6 +46,12 @@ check-poetry: ## Check Poetry version
 	@if [ "$(CONTAINER_POETRY_VERSION)" == "$(EXPECTED_POETRY_VERSION)" ]; then echo "Ok" && exit 0; else echo "Error" && exit 1; fi
 
 
+## Poetry commands
+
+install: ## Install project dependencies
+	$(call docker_compose_run) bash -c "poetry env use /usr/local/bin/python && poetry install"
+
+
 define docker_compose
 	$(call docker_compose_file_variables) docker-compose --file $(DOCKER_COMPOSE_FILE) --project-name $(IMAGE_NAME)
 endef
