@@ -19,7 +19,7 @@ RUN mkdir ${WORKDIR} && \
 COPY --chown=user ./configs/poetry/* ${XDG_CONFIG_HOME}/pypoetry/
 
 ARG POETRY_VERSION
-RUN python3 -m pip install --user --upgrade pip && \
-    python3 -m pip install --user --prefer-binary --no-warn-script-location poetry==${POETRY_VERSION}
+RUN python -m pip install --user --upgrade pip && \
+    python -m pip install --user --prefer-binary --no-warn-script-location poetry==${POETRY_VERSION}
 
 WORKDIR ${WORKDIR}
