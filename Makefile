@@ -54,6 +54,9 @@ install: ## Install project dependencies
 test: ## Run test cases
 	$(call docker_compose_run) bash -c "poetry run pytest"
 
+pylint: ## Run pylint
+	$(call docker_compose_run) bash -c "poetry run pylint src test"
+
 
 define docker_compose
 	$(call docker_compose_file_variables) docker-compose --file $(DOCKER_COMPOSE_FILE) --project-name $(IMAGE_NAME)
