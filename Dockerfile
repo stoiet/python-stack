@@ -1,0 +1,16 @@
+ARG PYTHON_VERSION
+ARG DEBIAN_VERSION
+FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
+
+ENV HOME /home/user
+ENV USER user
+ENV UID 10000
+ENV WORKDIR ${HOME}/workdir
+
+RUN useradd -c ${USER} -d ${HOME} -l -m -s /bin/false -u ${UID} -U ${USER}
+
+USER ${USER}
+
+RUN mkdir -p ${WORKDIR}
+
+WORKDIR ${WORKDIR}
