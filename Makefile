@@ -22,8 +22,9 @@ help:
 
 bash: ## - bash shell
 	@docker container run \
-	$(call as_user) \
 	$(call as_interactive) \
+	$(call as_user) \
+	$(call with_labels) \
 	$(call with_volume) \
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
 	$(IMAGE_NAME):latest bash
@@ -41,7 +42,12 @@ build: ## - build image
 images: ## - list images
 	@docker image ls --filter label=project.name=$(PROJECT_NAME)
 
+containers: ## - list containers
+	@docker container ls --filter label=project.name=$(PROJECT_NAME)
+
 clean: ## - cleans up
+	@docker container prune --filter label=project.name=$(PROJECT_NAME) --force
+	@docker container ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker container rm --force
 	@docker image prune --filter label=project.name=$(PROJECT_NAME) --force
 	@docker image ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker image rm --force
 
