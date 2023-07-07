@@ -8,6 +8,10 @@ ENV WORKDIR ${HOME}/workdir
 ENV CONFIG ${HOME}/.config
 ENV PATH ${HOME}/.local/bin/:${PATH}
 
+RUN apt update && \
+    apt upgrade --assume-yes && \
+    apt autoremove
+
 ARG USER_NAME
 ARG USER_UID
 RUN useradd -c ${USER_NAME} -d ${HOME} -l -m -s /bin/false -u ${USER_UID} -U ${USER_NAME}

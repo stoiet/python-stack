@@ -20,7 +20,11 @@ help:
 	@echo
 
 build: ## - build image
-	docker image build $(call build_args) $(call labels) --tag $(IMAGE_NAME):latest .
+	docker image build \
+	$(call build_args) \
+	$(call build_labels) \
+	$(call build_secure) \
+	--tag $(IMAGE_NAME):latest .
 
 bash: ## - open bash shell
 	docker container run --interactive --rm --tty --user $(USER_NAME) --name $(CONTAINER_NAME)-$(CONTAINER_ID) --volume ./:/home/user/workdir $(IMAGE_NAME):latest bash
@@ -34,9 +38,14 @@ define build_args
 	--build-arg USER_UID=$(USER_UID)
 endef
 
-define labels
+define build_labels
 	--label PROJECT_NAME=$(PROJECT_NAME) \
 	--label DEBIAN_VERSION=$(DEBIAN_VERSION) \
 	--label POETRY_VERSION=$(POETRY_VERSION) \
 	--label PYTHON_VERSION=$(PYTHON_VERSION)
+endef
+
+define build_secure
+	--no-cache \
+	--pull
 endef
