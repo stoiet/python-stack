@@ -20,7 +20,7 @@ build: ## - build image
 	docker image build $(call build_args) $(call labels) --tag $(IMAGE_NAME):latest .
 
 bash: ## - open bash shell
-	docker container run --interactive --rm --tty --user user --name $(CONTAINER_NAME)-$(CONTAINER_ID) $(IMAGE_NAME):latest bash
+	docker container run --interactive --rm --tty --user user --name $(CONTAINER_NAME)-$(CONTAINER_ID) --volume ./:/home/user/workdir $(IMAGE_NAME):latest bash
 
 
 define build_args
