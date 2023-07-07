@@ -30,11 +30,15 @@ build: ## - build image
 	@docker image build \
 	$(call build_args) \
 	$(call build_labels) \
-	$(call build_secure) \
+	$(call build_force) \
 	--tag $(IMAGE_NAME):latest .
 
 images: ## - list images
 	@docker image ls --filter label=project.name=$(PROJECT_NAME)
+
+clean: ## - cleans up
+	@docker image prune --filter label=project.name=$(PROJECT_NAME) --force
+	@docker image ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker image rm --force
 
 
 define build_args
@@ -50,7 +54,6 @@ define build_labels
 	--label image.name=$(PROJECT_NAME)
 endef
 
-define build_secure
-	--no-cache \
-	--pull
+define build_force
+	--no-cache --pull
 endef
