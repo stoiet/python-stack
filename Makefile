@@ -12,22 +12,29 @@ USER_NAME       := user
 USER_UID        := 10000
 
 
-## Commands
-
 help:
 	@echo
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/\(.*\):.*##[ \t]*/    \1 ## /' | column -t -s '##'
 	@echo
 
+
+## Main commands
+
+bash: ## - bash shell
+	@docker container run --interactive --rm --tty --user $(USER_NAME) --name $(CONTAINER_NAME)-$(CONTAINER_ID) --volume ./:/home/user/workdir $(IMAGE_NAME):latest bash
+
+
+## Docker commands
+
 build: ## - build image
-	docker image build \
+	@docker image build \
 	$(call build_args) \
 	$(call build_labels) \
 	$(call build_secure) \
 	--tag $(IMAGE_NAME):latest .
 
-bash: ## - open bash shell
-	docker container run --interactive --rm --tty --user $(USER_NAME) --name $(CONTAINER_NAME)-$(CONTAINER_ID) --volume ./:/home/user/workdir $(IMAGE_NAME):latest bash
+images: ## - list images
+	@docker image ls --filter label=project.name=$(PROJECT_NAME)
 
 
 define build_args
@@ -39,10 +46,8 @@ define build_args
 endef
 
 define build_labels
-	--label PROJECT_NAME=$(PROJECT_NAME) \
-	--label DEBIAN_VERSION=$(DEBIAN_VERSION) \
-	--label POETRY_VERSION=$(POETRY_VERSION) \
-	--label PYTHON_VERSION=$(PYTHON_VERSION)
+	--label project.name=$(PROJECT_NAME) \
+	--label image.name=$(PROJECT_NAME)
 endef
 
 define build_secure
