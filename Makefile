@@ -41,16 +41,16 @@ build: ## - build image
 	--tag $(IMAGE_NAME):latest .
 
 images: ## - list images
-	@docker image ls --filter label=project.name=$(PROJECT_NAME)
+	@docker image ls $(call filter_project)
 
 containers: ## - list containers
-	@docker container ls --filter label=project.name=$(PROJECT_NAME)
+	@docker container ls $(call filter_project)
 
 clean: ## - cleans up
-	@docker container prune --filter label=project.name=$(PROJECT_NAME) --force
-	@docker container ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker container rm --force
-	@docker image prune --filter label=project.name=$(PROJECT_NAME) --force
-	@docker image ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker image rm --force
+	@docker container prune $(call filter_project) --force
+	@docker container ls $(call filter_project) --quiet | xargs docker container rm --force
+	@docker image prune $(call filter_project) --force
+	@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
 
 
 define with_build_args
@@ -80,4 +80,8 @@ endef
 
 define as_user
 	--user $(USER_NAME)
+endef
+
+define filter_project
+	--filter label=project.name=$(PROJECT_NAME)
 endef
