@@ -21,16 +21,21 @@ help:
 ## Main commands
 
 bash: ## - bash shell
-	@docker container run --interactive --rm --tty --user $(USER_NAME) --name $(CONTAINER_NAME)-$(CONTAINER_ID) --volume ./:/home/user/workdir $(IMAGE_NAME):latest bash
+	@docker container run \
+	$(call as_user) \
+	$(call as_interactive) \
+	$(call with_volume) \
+	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
+	$(IMAGE_NAME):latest bash
 
 
 ## Docker commands
 
 build: ## - build image
 	@docker image build \
-	$(call build_args) \
-	$(call build_labels) \
-	$(call build_force) \
+	$(call with_build_args) \
+	$(call with_labels) \
+	$(call force_rebuild) \
 	--tag $(IMAGE_NAME):latest .
 
 images: ## - list images
@@ -41,7 +46,7 @@ clean: ## - cleans up
 	@docker image ls --filter label=project.name=$(PROJECT_NAME) --quiet | xargs docker image rm --force
 
 
-define build_args
+define with_build_args
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
 	--build-arg POETRY_VERSION=$(POETRY_VERSION) \
 	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
@@ -49,11 +54,23 @@ define build_args
 	--build-arg USER_UID=$(USER_UID)
 endef
 
-define build_labels
+define with_labels
 	--label project.name=$(PROJECT_NAME) \
 	--label image.name=$(PROJECT_NAME)
 endef
 
-define build_force
+define force_rebuild
 	--no-cache --pull
+endef
+
+define as_interactive
+	--interactive --rm --tty
+endef
+
+define with_volume
+	--volume ./:/home/user/workdir
+endef
+
+define as_user
+	--user $(USER_NAME)
 endef
