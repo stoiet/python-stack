@@ -1,12 +1,12 @@
-PROJECT_NAME	:= python-stack
+PROJECT_NAME    := python-stack
 
-DEBIAN_VERSION	:= `cat ./version/debian`
-POETRY_VERSION	:= `cat ./version/poetry`
-PYTHON_VERSION	:= `cat ./version/python`
+DEBIAN_VERSION  := `cat ./version/debian`
+POETRY_VERSION  := `cat ./version/poetry`
+PYTHON_VERSION  := `cat ./version/python`
 
-IMAGE_NAME		:= $(PROJECT_NAME)-image
-CONTAINER_NAME	:= $(PROJECT_NAME)-container
-CONTAINER_ID	:= $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
+IMAGE_NAME      := $(PROJECT_NAME)-image
+CONTAINER_NAME  := $(PROJECT_NAME)-container
+CONTAINER_ID    := $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
 
 
 ## Commands
