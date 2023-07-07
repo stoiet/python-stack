@@ -33,6 +33,7 @@ bash: ## - bash shell
 ## Docker commands
 
 build: ## - build image
+	@make clean
 	@docker image build \
 	$(call with_build_args) \
 	$(call with_labels) \
