@@ -2,16 +2,18 @@ ARG PYTHON_VERSION
 ARG DEBIAN_VERSION
 FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 
-ENV HOME /home/user
-ENV USER user
-ENV UID 10000
+ARG USER_NAME
+ENV HOME /home/${USER_NAME}
 ENV WORKDIR ${HOME}/workdir
 ENV CONFIG ${HOME}/.config
 ENV PATH ${HOME}/.local/bin/:${PATH}
 
-RUN useradd -c ${USER} -d ${HOME} -l -m -s /bin/false -u ${UID} -U ${USER}
+ARG USER_NAME
+ARG USER_UID
+RUN useradd -c ${USER_NAME} -d ${HOME} -l -m -s /bin/false -u ${USER_UID} -U ${USER_NAME}
 
-USER ${USER}
+ARG USER_NAME
+USER ${USER_NAME}
 
 RUN mkdir -p ${WORKDIR} && \
     mkdir -p ${CONFIG}
