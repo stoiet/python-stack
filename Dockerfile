@@ -5,14 +5,17 @@ FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
 ARG USER_NAME
 ENV USER_HOME /home/${USER_NAME}
 ENV USER_CONFIG ${USER_HOME}/.config
-ENV USER_LOCAL ${USER_HOME}/.local
 ENV USER_WORKDIR ${USER_HOME}/workdir
-ENV PATH ${USER_LOCAL}/bin:${PATH}
 
+ARG POETRY_VERSION
 RUN apt update && \
     apt upgrade --assume-yes && \
     apt install --assume-yes --no-install-recommends curl && \
-    apt autoremove
+    curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local POETRY_VERSION=${POETRY_VERSION} python - && \
+    apt remove --assume-yes curl && \
+    apt autoremove --assume-yes && \
+    apt autoclean && \
+    rm -rf /var/lib/apt/lists/*
 
 ARG USER_NAME
 ARG USER_UID
@@ -22,12 +25,8 @@ ARG USER_NAME
 USER ${USER_NAME}
 
 RUN mkdir -p ${USER_WORKDIR} && \
-    mkdir -p ${USER_CONFIG} && \
-    mkdir -p ${USER_LOCAL}
-    
-WORKDIR ${USER_WORKDIR}
+    mkdir -p ${USER_CONFIG}
 
 COPY --chown=user ./config/poetry.toml ${USER_CONFIG}/pypoetry/config.toml
 
-ARG POETRY_VERSION
-RUN curl -sSL https://install.python-poetry.org | POETRY_HOME=${USER_LOCAL} POETRY_VERSION=${POETRY_VERSION} python -
+WORKDIR ${USER_WORKDIR}
