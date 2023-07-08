@@ -5,6 +5,9 @@ POETRY_VERSION  := `cat ./version/poetry`
 PYTHON_VERSION  := `cat ./version/python`
 
 IMAGE_NAME      := $(PROJECT_NAME)-image
+IMAGE_VERSION   := latest
+IMAGE_TAG       := $(IMAGE_NAME):$(IMAGE_VERSION)
+
 CONTAINER_NAME  := $(PROJECT_NAME)-container
 CONTAINER_ID    := $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
 
@@ -27,18 +30,19 @@ bash: ## - bash shell
 	$(call with_labels) \
 	$(call with_volume) \
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
-	$(IMAGE_NAME):latest bash
+	$(IMAGE_TAG) bash
 
 
 ## Docker commands
 
-build: ## - build image
-	@make clean
+build: prune rebuild ## - build image
+
+rebuild:
 	@docker image build \
 	$(call with_build_args) \
 	$(call with_labels) \
 	$(call force_rebuild) \
-	--tag $(IMAGE_NAME):latest .
+	--tag $(IMAGE_TAG) .
 
 images: ## - list images
 	@docker image ls $(call filter_project)
@@ -46,12 +50,15 @@ images: ## - list images
 containers: ## - list containers
 	@docker container ls $(call filter_project)
 
-clean: ## - cleans up
+prune: prune-containers prune-images ## - cleans up
+
+prune-containers:
 	@docker container prune $(call filter_project) --force
 	@docker container ls $(call filter_project) --quiet | xargs docker container rm --force
+
+prune-images:
 	@docker image prune $(call filter_project) --force
 	@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
-
 
 define with_build_args
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
@@ -74,12 +81,12 @@ define as_interactive
 	--interactive --rm --tty
 endef
 
-define with_volume
-	--volume ./:/home/user/workdir
-endef
-
 define as_user
 	--user $(USER_NAME)
+endef
+
+define with_volume
+	--volume ./:/home/user/workdir
 endef
 
 define filter_project
