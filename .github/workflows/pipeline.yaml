@@ -6,22 +6,29 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref_name }}
   cancel-in-progress: true
 
+env:
+  IMAGE_NAME: python-stack-image
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - run: make build
+      
       - uses: ./.github/actions/image-save
         with:
-          IMAGE_NAME: python-stack-image
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
 
   check:
     runs-on: ubuntu-latest
     needs: [build]
     steps:
       - uses: actions/checkout@v3
+
       - uses: ./.github/actions/image-load
         with:
-          IMAGE_NAME: python-stack-image
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+
       - run: make images

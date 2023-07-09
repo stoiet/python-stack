@@ -6,8 +6,8 @@ DEBIAN_VERSION  := `cat ./version/debian`
 POETRY_VERSION  := `cat ./version/poetry`
 PYTHON_VERSION  := `cat ./version/python`
 
-IMAGE_NAME      := $(PROJECT_NAME)-image
-IMAGE_VERSION   := latest
+IMAGE_NAME      := $(or ${IMAGE_NAME}, ${IMAGE_NAME}, $(PROJECT_NAME)-image)
+IMAGE_VERSION   := $(or ${IMAGE_VERSION}, ${IMAGE_VERSION}, latest)
 IMAGE_TAG       := $(IMAGE_NAME):$(IMAGE_VERSION)
 
 CONTAINER_NAME  := $(PROJECT_NAME)-container
@@ -61,6 +61,13 @@ prune-containers:
 prune-images:
 	-@docker image prune $(call filter_project) --force
 	-@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
+
+save-image:
+	@docker image save $(IMAGE_TAG) | pigz --fast --processes `nproc` > /tmp/$(IMAGE_NAME).tar.gz
+
+load-image:
+	@docker image load < /tmp/$(IMAGE_NAME).tar.gz
+
 
 define with_build_args
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
