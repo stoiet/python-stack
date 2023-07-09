@@ -13,7 +13,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: docker image save ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} | pigz --fast -p$(nproc) --list > /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
+    - run: docker image save ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} | pigz --fast --processes $(nproc) > /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
       shell: bash
 
     - uses: actions/upload-artifact@v3
