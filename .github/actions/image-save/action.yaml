@@ -1,0 +1,24 @@
+name: Save image
+description: Save docker image as an artifact
+
+inputs:
+  IMAGE_NAME:
+    description: IMAGE_NAME
+    required: true
+  IMAGE_VERSION:
+    description: IMAGE_VERSION
+    required: true
+    default: latest
+
+runs:
+  using: composite
+  steps:
+    - run: docker image save ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} | pigz --fast -p$(nproc) --list > /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
+      shell: bash
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: ${{ inputs.IMAGE_NAME }}
+        path: /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
+        if-no-files-found: error
+        retention-days: 1
