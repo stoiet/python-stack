@@ -55,12 +55,12 @@ containers: ## - list containers
 prune: prune-containers prune-images ## - cleans up
 
 prune-containers:
-	@docker container prune $(call filter_project) --force
-	@docker container ls $(call filter_project) --quiet | xargs docker container rm --force
+	-@docker container prune $(call filter_project) --force
+	-@docker container ls $(call filter_project) --quiet | xargs docker container rm --force
 
 prune-images:
-	@docker image prune $(call filter_project) --force
-	@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
+	-@docker image prune $(call filter_project) --force
+	-@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
 
 define with_build_args
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
