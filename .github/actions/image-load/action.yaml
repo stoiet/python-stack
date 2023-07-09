@@ -1,0 +1,22 @@
+name: Load image
+description: Load docker image as an artifact
+
+inputs:
+  IMAGE_NAME:
+    description: IMAGE_NAME
+    required: true
+  IMAGE_VERSION:
+    description: IMAGE_VERSION
+    required: true
+    default: latest
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{ inputs.IMAGE_NAME }}
+        path: /tmp
+
+    - run: docker image load < /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
+      shell: bash
