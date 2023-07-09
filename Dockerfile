@@ -8,13 +8,13 @@ ENV USER_CONFIG ${USER_HOME}/.config
 ENV USER_WORKDIR ${USER_HOME}/workdir
 
 ARG POETRY_VERSION
-RUN apt update && \
-    apt upgrade --assume-yes && \
-    apt install --assume-yes --no-install-recommends curl && \
+RUN apt-get update && \
+    apt-get upgrade --assume-yes && \
+    apt-get install --assume-yes --no-install-recommends curl && \
     curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local POETRY_VERSION=${POETRY_VERSION} python - && \
-    apt remove --assume-yes curl && \
-    apt autoremove --assume-yes && \
-    apt autoclean && \
+    apt-get remove --assume-yes curl && \
+    apt-get autoremove --assume-yes && \
+    apt-get autoclean && \
     rm -rf /var/lib/apt/lists/*
 
 ARG USER_NAME
