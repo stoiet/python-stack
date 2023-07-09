@@ -1,3 +1,5 @@
+SHELL = /bin/bash
+
 PROJECT_NAME    := python-stack
 
 DEBIAN_VERSION  := `cat ./version/debian`
