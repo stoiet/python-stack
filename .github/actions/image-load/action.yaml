@@ -5,14 +5,21 @@ inputs:
   IMAGE_NAME:
     description: IMAGE_NAME
     required: true
+  IMAGE_VERSION:
+    description: IMAGE_VERSION
+    required: true
+    default: latest
 
 runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
       with:
-        name: ${{ inputs.IMAGE_NAME }}
+        name: ${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
         path: /tmp
 
-    - run: IMAGE_NAME=${{ inputs.IMAGE_NAME }} make load-image
+    - run: make load-image
       shell: bash
+      env:
+          IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}

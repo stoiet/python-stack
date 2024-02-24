@@ -13,12 +13,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - run: IMAGE_NAME=${{ inputs.IMAGE_NAME }} IMAGE_VERSION=${{ inputs.IMAGE_VERSION }} make save-image
+    - run: make save-image
       shell: bash
+      env:
+          IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
 
     - uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.IMAGE_NAME }}
-        path: /tmp/${{ inputs.IMAGE_NAME }}.tar.gz
+        name: ${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
+        path: /tmp/${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}.tar.gz
         if-no-files-found: error
         retention-days: 1

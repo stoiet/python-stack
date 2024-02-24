@@ -9,6 +9,7 @@ PYTHON_VERSION  := `cat ./version/python`
 IMAGE_NAME      := $(or ${IMAGE_NAME}, ${IMAGE_NAME}, $(PROJECT_NAME)-image)
 IMAGE_VERSION   := $(or ${IMAGE_VERSION}, ${IMAGE_VERSION}, latest)
 IMAGE_TAG       := $(IMAGE_NAME):$(IMAGE_VERSION)
+IMAGE_ARCHIVE   := $(IMAGE_NAME)-$(IMAGE_VERSION).tar.gz
 
 CONTAINER_NAME  := $(PROJECT_NAME)-container
 CONTAINER_ID    := $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
@@ -63,10 +64,10 @@ prune-images:
 	-@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
 
 save-image:
-	@docker image save $(IMAGE_TAG) | pigz --fast --processes `nproc` > /tmp/$(IMAGE_NAME).tar.gz
+	@docker image save $(IMAGE_TAG) | pigz --fast --processes `nproc` > /tmp/$(IMAGE_ARCHIVE)
 
 load-image:
-	@docker image load < /tmp/$(IMAGE_NAME).tar.gz
+	@docker image load < /tmp/$(IMAGE_ARCHIVE)
 
 
 define with_build_args
