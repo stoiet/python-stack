@@ -19,7 +19,7 @@ runs:
           IMAGE_NAME: ${{ inputs.IMAGE_NAME }}
           IMAGE_VERSION: ${{ inputs.IMAGE_VERSION }}
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: ${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}
         path: /tmp/${{ inputs.IMAGE_NAME }}-${{ inputs.IMAGE_VERSION }}.tar.gz
