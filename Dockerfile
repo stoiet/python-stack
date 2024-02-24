@@ -8,7 +8,8 @@ ENV USER_CONFIG ${USER_HOME}/.config
 ENV USER_WORKDIR ${USER_HOME}/workdir
 
 ARG POETRY_VERSION
-RUN apt-get update && \
+RUN set -ex && \
+    apt-get update && \
     apt-get upgrade --assume-yes && \
     apt-get install --assume-yes --no-install-recommends --no-install-suggests curl && \
     curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local POETRY_VERSION=${POETRY_VERSION} python - && \
