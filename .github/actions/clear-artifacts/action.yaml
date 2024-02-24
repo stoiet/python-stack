@@ -1,0 +1,14 @@
+name: Clean artifacts
+description: Clean artifacts
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        for id in $(gh api -H "Accept: application/vnd.github+json" /repos/stoiet/python-stack/actions/artifacts?per_page=1000 --jq ".artifacts[] | .id"); do
+          gh api --method DELETE -H "Accept: application/vnd.github+json" /repos/stoiet/python-stack/actions/artifacts/$id;
+          echo $id;
+        done
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
