@@ -10,10 +10,11 @@ ENV USER_WORKDIR ${USER_HOME}/workdir
 ARG POETRY_VERSION
 RUN apt-get update && \
     apt-get upgrade --assume-yes && \
-    apt-get install --assume-yes --no-install-recommends curl && \
+    apt-get install --assume-yes --no-install-recommends --no-install-suggests curl && \
     curl -sSL https://install.python-poetry.org | POETRY_HOME=/usr/local POETRY_VERSION=${POETRY_VERSION} python - && \
-    apt-get remove --assume-yes curl && \
-    apt-get autoremove --assume-yes && \
+    apt-get remove --assume-yes --purge curl && \
+    apt-get autoremove --assume-yes --purge && \
+    apt-get clean && \
     apt-get autoclean && \
     rm -rf /var/lib/apt/lists/*
 
