@@ -1,6 +1,6 @@
 ARG PYTHON_VERSION
 ARG DEBIAN_VERSION
-FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION}
+FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION} AS base
 
 ARG USER_NAME
 ENV USER_HOME /home/${USER_NAME}
@@ -32,3 +32,10 @@ RUN mkdir -p ${USER_WORKDIR} && \
 COPY --chown=user ./config/poetry.toml ${USER_CONFIG}/pypoetry/config.toml
 
 WORKDIR ${USER_WORKDIR}
+
+FROM base AS build
+
+COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
+COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
+
+RUN poetry install --sync --no-root --all-extras --compile --no-interaction

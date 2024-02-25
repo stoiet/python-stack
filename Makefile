@@ -33,6 +33,7 @@ bash: ## - bash shell
 	$(call as_user) \
 	$(call with_labels) \
 	$(call with_volume) \
+	--target build \
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
 	$(IMAGE_TAG) bash
 
