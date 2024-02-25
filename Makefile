@@ -57,6 +57,9 @@ containers: ## - list containers
 stats: ## - show container stats
 	@docker container ls $(call filter_project) --quiet | xargs docker container stats
 
+scout: ## - analyze image
+	@docker image ls $(call filter_project) --quiet | xargs docker scout quickview
+
 prune: prune-containers prune-images ## - prune containers and images
 
 prune-containers:
