@@ -8,6 +8,9 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "3.12.2"
 
+[tool.poetry.group.production.dependencies]
+uvicorn = {version = "0.27.1", extras = ["standard"]}
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
