@@ -53,6 +53,9 @@ images: ## - list images
 containers: ## - list containers
 	@docker container ls $(call filter_project)
 
+stats: ## - containers' stats
+	@docker container ls $(call filter_project) --quiet | xargs docker container stats
+
 prune: prune-containers prune-images ## - cleans up
 
 prune-containers:
