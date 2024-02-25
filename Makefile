@@ -38,7 +38,6 @@ bash: ## - bash shell
 
 install: ## - install dependencies
 	@docker container run \
-	$(call as_interactive) \
 	$(call as_removable) \
 	$(call as_user) \
 	$(call with_labels) \

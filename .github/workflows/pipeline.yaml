@@ -41,8 +41,6 @@ jobs:
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
       - run: make images
-      - run: make scout
-      - run: make install
 
   clear:
     runs-on: ubuntu-latest
