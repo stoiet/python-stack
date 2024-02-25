@@ -54,10 +54,10 @@ images: ## - list images
 containers: ## - list containers
 	@docker container ls $(call filter_project)
 
-stats: ## - containers' stats
+stats: ## - show container stats
 	@docker container ls $(call filter_project) --quiet | xargs docker container stats
 
-prune: prune-containers prune-images ## - cleans up
+prune: prune-containers prune-images ## - prune containers and images
 
 prune-containers:
 	-@docker container prune $(call filter_project) --force
@@ -100,7 +100,7 @@ define as_removable
 endef
 
 define as_user
-	--user $(USER_NAME)
+	--user $(USER_NAME):$(USER_NAME)
 endef
 
 define with_volume
