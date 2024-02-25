@@ -55,3 +55,5 @@ jobs:
           show-progress: false
 
       - uses: ./.github/actions/clear-artifacts
+        with:
+          ARTIFACT_NAME: ${{ env.IMAGE_NAME }}-${{ env.IMAGE_VERSION }}
