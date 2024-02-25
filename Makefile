@@ -36,6 +36,16 @@ bash: ## - bash shell
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
 	$(IMAGE_TAG) bash
 
+install: ## - install dependencies
+	@docker container run \
+	$(call as_interactive) \
+	$(call as_removable) \
+	$(call as_user) \
+	$(call with_labels) \
+	$(call with_volume) \
+	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
+	$(IMAGE_TAG) poetry install --sync --no-root --all-extras --compile --no-interaction
+
 
 ## Docker commands
 

@@ -42,6 +42,7 @@ jobs:
 
       - run: make images
       - run: make scout
+      - run: make install
 
   clear:
     runs-on: ubuntu-latest
