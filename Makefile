@@ -99,7 +99,7 @@ define as_user
 endef
 
 define with_volume
-	--volume ./:/home/user/workdir
+	--volume ./:/home/user/workdir --read-only
 endef
 
 define filter_project
