@@ -33,7 +33,6 @@ bash: ## - bash shell
 	$(call as_user) \
 	$(call with_labels) \
 	$(call with_volume) \
-	--target build \
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
 	$(IMAGE_TAG) bash
 
@@ -56,6 +55,7 @@ rebuild:
 	$(call with_build_args) \
 	$(call with_labels) \
 	$(call force_rebuild) \
+	--target production \
 	--tag $(IMAGE_TAG) .
 
 images: ## - list images

@@ -38,4 +38,33 @@ FROM base AS build
 COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
 COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
 
-RUN poetry install --sync --no-root --all-extras --compile --no-interaction
+RUN poetry install --sync --no-root --all-extras --compile --no-interaction --only production
+
+COPY --chown=user ./src ${USER_WORKDIR}/src
+
+RUN poetry run python -m compileall ${USER_WORKDIR}/src
+
+ARG PYTHON_VERSION
+ARG DEBIAN_VERSION
+FROM python:${PYTHON_VERSION}-alpine AS production
+
+ARG USER_NAME
+ENV USER_HOME /home/${USER_NAME}
+ENV USER_WORKDIR ${USER_HOME}/workdir
+
+ARG USER_NAME
+ARG USER_UID
+RUN addgroup --gid ${USER_UID} ${USER_NAME} && \
+    adduser -s /bin/false -G ${USER_NAME} -D -u ${USER_UID} ${USER_NAME}
+
+ARG USER_NAME
+USER ${USER_NAME}
+
+RUN mkdir -p ${USER_WORKDIR}
+
+COPY --from=build --chown=user ${USER_WORKDIR}/.venv ${USER_WORKDIR}/.venv
+COPY --from=build --chown=user ${USER_WORKDIR}/src ${USER_WORKDIR}/src
+
+WORKDIR ${USER_WORKDIR}
+
+CMD . .venv/bin/activate && python -m uvicorn src.main:app
