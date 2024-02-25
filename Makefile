@@ -29,6 +29,7 @@ help:
 bash: ## - bash shell
 	@docker container run \
 	$(call as_interactive) \
+	$(call as_removable) \
 	$(call as_user) \
 	$(call with_labels) \
 	$(call with_volume) \
@@ -91,7 +92,11 @@ define force_rebuild
 endef
 
 define as_interactive
-	--interactive --rm --tty
+	--interactive --tty
+endef
+
+define as_removable
+	--rm
 endef
 
 define as_user
