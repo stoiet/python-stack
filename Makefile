@@ -1,26 +1,26 @@
 SHELL = /bin/bash
 
-PROJECT_NAME    := python-stack
+PROJECT_NAME			:= python-stack
 
-DEBIAN_VERSION  := `cat ./version/debian`
-POETRY_VERSION  := `cat ./version/poetry`
-PYTHON_VERSION  := `cat ./version/python`
+DEBIAN_VERSION		:= `cat ./version/debian`
+POETRY_VERSION		:= `cat ./version/poetry`
+PYTHON_VERSION		:= `cat ./version/python`
 
-IMAGE_NAME      := $(or ${IMAGE_NAME}, ${IMAGE_NAME}, $(PROJECT_NAME)-image)
-IMAGE_VERSION   := $(or ${IMAGE_VERSION}, ${IMAGE_VERSION}, latest)
-IMAGE_TAG       := $(IMAGE_NAME):$(IMAGE_VERSION)
-IMAGE_ARCHIVE   := $(IMAGE_NAME)-$(IMAGE_VERSION).tar.gz
+IMAGE_NAME				:= $(or ${IMAGE_NAME}, ${IMAGE_NAME}, $(PROJECT_NAME)-image)
+IMAGE_VERSION		 	:= $(or ${IMAGE_VERSION}, ${IMAGE_VERSION}, latest)
+IMAGE_TAG		 			:= $(IMAGE_NAME):$(IMAGE_VERSION)
+IMAGE_ARCHIVE		 	:= $(IMAGE_NAME)-$(IMAGE_VERSION).tar.gz
 
-CONTAINER_NAME  := $(PROJECT_NAME)-container
-CONTAINER_ID    := $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
+CONTAINER_NAME		:= $(PROJECT_NAME)-container
+CONTAINER_ID			:= $(or ${CONTAINER_ID}, ${CONTAINER_ID}, `date +%s`)
 
-USER_NAME       := user
-USER_UID        := 10000
+USER_NAME		 			:= user
+USER_UID					:= 10000
 
 
 help:
 	@echo
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/\(.*\):.*##[ \t]*/    \1 ## /' | column -t -s '##'
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/\(.*\):.*##[ \t]*/   \1 ## /' | column -t -s '##'
 	@echo
 
 
@@ -69,6 +69,15 @@ stats: ## - show container stats
 
 scout: ## - analyze image
 	@docker image ls $(call filter_project) --quiet | xargs docker scout quickview
+
+dive: ## - dive
+	@docker container run \
+	$(call as_interactive) \
+	$(call as_removable) \
+	$(call with_docker) \
+	--platform linux/amd64 \
+	wagoodman/dive:latest \
+	$(IMAGE_TAG)
 
 prune: prune-containers prune-images ## - prune containers and images
 
@@ -122,4 +131,8 @@ endef
 
 define filter_project
 	--filter label=project.name=$(PROJECT_NAME)
+endef
+
+define with_docker
+	--volume /var/run/docker.sock:/var/run/docker.sock
 endef
