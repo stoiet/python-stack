@@ -1,0 +1,10 @@
+name: Install docker scout
+description: Install docker scout
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        sudo curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o /tmp/install-scout.sh
+        sh /tmp/install-scout.sh
+      shell: bash

@@ -8,7 +8,7 @@ ENV USER_CONFIG ${USER_HOME}/.config
 ENV USER_WORKDIR ${USER_HOME}/workdir
 
 ARG POETRY_VERSION
-RUN set -ex && \
+RUN set -eux && \
     apt-get update && \
     apt-get upgrade --assume-yes && \
     apt-get install --assume-yes --no-install-recommends --no-install-suggests curl && \
@@ -38,7 +38,7 @@ FROM base AS build
 COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
 COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
 
-RUN poetry install --sync --no-root --all-extras --compile --no-interaction --only production
+RUN poetry install --sync --no-root --all-extras --compile --no-interaction
 
 COPY --chown=user ./src ${USER_WORKDIR}/src
 

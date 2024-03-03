@@ -67,17 +67,17 @@ containers: ## - list containers
 stats: ## - show container stats
 	@docker container ls $(call filter_project) --quiet | xargs docker container stats
 
-scout: ## - analyze image
+scout: ## - scout image
 	@docker image ls $(call filter_project) --quiet | xargs docker scout quickview
 
-dive: ## - dive
+dive: ## - dive image
 	@docker container run \
-	$(call as_interactive) \
 	$(call as_removable) \
 	$(call with_docker) \
 	--platform linux/amd64 \
 	wagoodman/dive:latest \
-	$(IMAGE_TAG)
+	$(IMAGE_TAG) \
+	--ci --highestWastedBytes "1MB"
 
 prune: prune-containers prune-images ## - prune containers and images
 
