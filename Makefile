@@ -79,6 +79,14 @@ dive: ## - dive image
 	$(IMAGE_TAG) \
 	--ci --highestWastedBytes "1MB"
 
+grype: ## - grype image
+	@docker container run \
+	$(call as_removable) \
+	$(call with_docker) \
+	anchore/grype:latest \
+	$(IMAGE_TAG) \
+	--add-cpes-if-none --show-suppressed --fail-on critical --scope all-layers --only-fixed
+
 prune: prune-containers prune-images ## - prune containers and images
 
 prune-containers:

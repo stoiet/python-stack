@@ -45,6 +45,7 @@ jobs:
       - run: echo ${{ secrets.DOCKER_SCOUT_REGISTRY_TOKEN }} | docker login --username ${{ secrets.DOCKER_SCOUT_REGISTRY_USER }} --password-stdin
       - run: make scout
       - run: make dive
+      - run: make grype
 
   clear:
     runs-on: ubuntu-latest
