@@ -59,7 +59,7 @@ rebuild:
 	--tag $(IMAGE_TAG) .
 
 images: ## - list images
-	@docker image ls $(call filter_project)
+	@docker image ls $(call filter_project) --digests
 
 containers: ## - list containers
 	@docker container ls $(call filter_project)
