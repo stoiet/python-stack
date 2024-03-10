@@ -46,6 +46,7 @@ jobs:
       - run: make scout
       - run: make dive
       - run: make grype
+      - run: make trivy
 
   clear:
     runs-on: ubuntu-latest

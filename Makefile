@@ -87,6 +87,14 @@ grype: ## - grype image
 	$(IMAGE_TAG) \
 	--add-cpes-if-none --show-suppressed --fail-on critical --scope all-layers --only-fixed
 
+trivy: ## - trivy image
+	@docker container run \
+	$(call as_removable) \
+	$(call with_docker) \
+	aquasec/trivy:latest \
+	image --no-progress --ignore-unfixed \
+	$(IMAGE_TAG)
+
 prune: prune-containers prune-images ## - prune containers and images
 
 prune-containers:
