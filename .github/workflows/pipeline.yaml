@@ -10,9 +10,9 @@ env:
   IMAGE_NAME: python-stack-image
   IMAGE_VERSION: ${{ github.sha }}
 
-jobs:      
+jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
         with:
@@ -20,14 +20,14 @@ jobs:
           show-progress: false
 
       - run: make build
-      
+
       - uses: ./.github/actions/image-save
         with:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
   check:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [build]
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +49,7 @@ jobs:
       - run: make trivy
 
   clear:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [check]
     if: ${{ always() }}
     permissions:
