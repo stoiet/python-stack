@@ -96,7 +96,7 @@ trivy: ## - trivy image
 	image --no-progress --ignore-unfixed \
 	$(IMAGE_TAG)
 
-prune: prune-containers prune-images ## - prune containers and images
+prune: prune-containers prune-images prune-system ## - prune containers and images
 
 prune-containers:
 	-@docker container prune $(call filter_project) --force
@@ -105,6 +105,9 @@ prune-containers:
 prune-images:
 	-@docker image prune $(call filter_project) --force
 	-@docker image ls $(call filter_project) --quiet | xargs docker image rm --force
+
+prune-system:
+	-@docker system prune $(call filter_project) --force
 
 save-image:
 	@docker image save $(IMAGE_TAG) | pigz --fast --processes `nproc` > /tmp/$(IMAGE_ARCHIVE)
