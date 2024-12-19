@@ -45,7 +45,6 @@ COPY --chown=user ./src ${USER_WORKDIR}/src
 RUN poetry run python -m compileall ${USER_WORKDIR}/src
 
 ARG PYTHON_VERSION
-ARG DEBIAN_VERSION
 FROM python:${PYTHON_VERSION}-alpine AS production
 
 ARG USER_NAME
