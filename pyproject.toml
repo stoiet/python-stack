@@ -9,7 +9,7 @@ readme = "README.md"
 python = "3.12.8"
 
 [tool.poetry.group.production.dependencies]
-uvicorn = {version = "0.27.1", extras = ["standard"]}
+uvicorn = {version = "0.34.0", extras = ["standard"]}
 
 [build-system]
 requires = ["poetry-core"]
