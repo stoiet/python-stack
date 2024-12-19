@@ -1,5 +1,15 @@
 cache-dir = "~/workdir/.cache/poetry"
 
+[experimental]
+system-git-client = false
+
+[installer]
+modern-installation = true
+parallel = true
+
+[solver]
+lazy-wheel = true
+
 [virtualenvs]
 create = true
 in-project = true
@@ -11,6 +21,5 @@ path = "~/workdir/.venv"
 prefer-active-python = false
 prompt = "{project_name}"
 
-[installer]
-modern-installation = true
-parallel = true
+[keyring]
+enabled = false
