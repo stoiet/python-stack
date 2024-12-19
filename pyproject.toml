@@ -6,7 +6,7 @@ authors = ["stoiet"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.12.8"
+python = "3.13.1"
 
 [tool.poetry.group.production.dependencies]
 uvicorn = {version = "0.34.0", extras = ["standard"]}
