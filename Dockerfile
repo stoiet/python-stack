@@ -44,8 +44,9 @@ COPY --chown=user ./src ${USER_WORKDIR}/src
 
 RUN poetry run python -m compileall ${USER_WORKDIR}/src
 
+ARG ALPINE_VERSION
 ARG PYTHON_VERSION
-FROM python:${PYTHON_VERSION}-alpine AS production
+FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION} AS production
 
 ARG USER_NAME
 ENV USER_HOME /home/${USER_NAME}

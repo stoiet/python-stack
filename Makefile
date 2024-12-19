@@ -2,6 +2,7 @@ SHELL = /bin/bash
 
 PROJECT_NAME    := python-stack
 
+ALPINE_VERSION  := `cat ./version/alpine`
 DEBIAN_VERSION  := `cat ./version/debian`
 POETRY_VERSION  := `cat ./version/poetry`
 PYTHON_VERSION  := `cat ./version/python`
@@ -113,6 +114,7 @@ load-image:
 
 
 define with_build_args
+	--build-arg ALPINE_VERSION=$(ALPINE_VERSION) \
 	--build-arg DEBIAN_VERSION=$(DEBIAN_VERSION) \
 	--build-arg POETRY_VERSION=$(POETRY_VERSION) \
 	--build-arg PYTHON_VERSION=$(PYTHON_VERSION) \
@@ -122,7 +124,8 @@ endef
 
 define with_labels
 	--label project.name=$(PROJECT_NAME) \
-	--label image.name=$(PROJECT_NAME)
+	--label image.name=$(IMAGE_NAME) \
+	--label image.version=$(IMAGE_VERSION)
 endef
 
 define force_rebuild
