@@ -33,12 +33,21 @@ COPY --chown=user ./config/poetry.toml ${USER_CONFIG}/pypoetry/config.toml
 
 WORKDIR ${USER_WORKDIR}
 
-FROM base AS build
+FROM base AS dependencies
 
 COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
 COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
 
 RUN poetry install --sync --no-root --no-directory --all-extras --compile --no-interaction --no-plugins --no-cache
+
+COPY --chown=user ./src ${USER_WORKDIR}/src
+
+FROM base AS compiled
+
+COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
+COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
+
+RUN poetry install --sync --no-root --no-directory --all-extras --compile --no-interaction --no-plugins --no-cache --only production
 
 COPY --chown=user ./src ${USER_WORKDIR}/src
 
@@ -62,8 +71,8 @@ USER ${USER_NAME}
 
 RUN mkdir -p ${USER_WORKDIR}
 
-COPY --from=build --chown=user ${USER_WORKDIR}/.venv ${USER_WORKDIR}/.venv
-COPY --from=build --chown=user ${USER_WORKDIR}/src ${USER_WORKDIR}/src
+COPY --from=compiled --chown=user ${USER_WORKDIR}/.venv ${USER_WORKDIR}/.venv
+COPY --from=compiled --chown=user ${USER_WORKDIR}/src ${USER_WORKDIR}/src
 
 WORKDIR ${USER_WORKDIR}
 
