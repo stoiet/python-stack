@@ -19,6 +19,13 @@ runs:
     - uses: ./.github/actions/pass
     - uses: ./.github/actions/docker-credentials-helper
 
+    - run: |
+        set -eux
+        pass init ${{ inputs.DOCKERHUB_USER }}
+        pass insert docker-credential-helpers/docker-pass-initialized-check
+        pass show docker-credential-helpers/docker-pass-initialized-check
+      shell: bash
+
     - run: docker logout
       shell: bash
 
