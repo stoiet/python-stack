@@ -35,14 +35,19 @@ jobs:
           persist-credentials: false
           show-progress: false
 
+      - uses: ./.github/actions/docker-login
+        with:
+          DOCKERHUB_USER: ${{ secrets.DOCKER_SCOUT_REGISTRY_USER }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKER_SCOUT_REGISTRY_TOKEN }}
+
       - uses: ./.github/actions/docker-scout
+
       - uses: ./.github/actions/image-load
         with:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
       - run: make images
-      - run: echo ${{ secrets.DOCKER_SCOUT_REGISTRY_TOKEN }} | docker login --username ${{ secrets.DOCKER_SCOUT_REGISTRY_USER }} --password-stdin
       - run: make scout
       - run: make dive
       - run: make grype

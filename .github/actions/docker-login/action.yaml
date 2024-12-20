@@ -1,0 +1,25 @@
+name: Docker login
+description: Docker login
+
+inputs:
+  DOCKERHUB_USER:
+    description: DOCKERHUB_USER
+    required: true
+  DOCKERHUB_TOKEN:
+    description: DOCKERHUB_TOKEN
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: cat ~/.docker/config.json
+      shell: bash
+
+    - run: which pass
+      shell: bash
+
+    - run: docker logout
+      shell: bash
+
+    - run: echo ${{ inputs.DOCKERHUB_TOKEN }} | docker login --username ${{ inputs.DOCKERHUB_USER }} --password-stdin
+      shell: bash
