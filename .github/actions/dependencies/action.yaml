@@ -1,0 +1,23 @@
+name: Install dependencies
+description: Install dependencies
+
+inputs:
+  DEPENDENCIES:
+    description: DEPENDENCIES
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        set -eu
+        sudo apt-get update
+        sudo apt-get install --assume-yes --no-install-recommends --no-install-suggests ${{ inputs.DEPENDENCIES }}
+        sudo apt-get clean; sudo apt-get autoclean
+      shell: bash
+
+    - run: |
+        for dependency in $(echo ${{ inputs.DEPENDENCIES }}); do
+          command -v $dependency > /dev/null 2>&1
+        done
+      shell: bash
