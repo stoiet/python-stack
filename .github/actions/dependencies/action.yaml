@@ -15,9 +15,3 @@ runs:
         sudo apt-get install --assume-yes --no-install-recommends --no-install-suggests ${{ inputs.DEPENDENCIES }}
         sudo apt-get clean; sudo apt-get autoclean
       shell: bash
-
-    - run: |
-        for dependency in $(echo ${{ inputs.DEPENDENCIES }}); do
-          command -v $dependency > /dev/null 2>&1
-        done
-      shell: bash
