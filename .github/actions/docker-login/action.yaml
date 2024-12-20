@@ -16,15 +16,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: ./.github/actions/pass
-    - uses: ./.github/actions/docker-credentials-helper
+    - uses: ./.github/actions/dependencies
+      with:
+        DEPENDENCIES: pass golang-docker-credential-helpers
 
     - run: |
         rm -fr ~/.password-store
         pass init ${{ inputs.DOCKERHUB_USER }}
         pass insert docker-credential-helpers/docker-pass-initialized-check
         pass show docker-credential-helpers/docker-pass-initialized-check
-      shell: bashp
+      shell: bash
 
     - run: docker logout
       shell: bash
