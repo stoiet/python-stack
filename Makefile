@@ -44,7 +44,7 @@ install: ## - install dependencies
 	$(call with_labels) \
 	$(call with_volume) \
 	--name $(CONTAINER_NAME)-$(CONTAINER_ID) \
-	$(IMAGE_TAG) poetry install --sync --no-root --all-extras --compile --no-interaction
+	$(IMAGE_TAG) poetry install --sync --no-root --no-directory --all-extras --compile --no-interaction --no-plugins
 
 
 ## Docker commands

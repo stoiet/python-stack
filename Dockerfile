@@ -38,7 +38,7 @@ FROM base AS build
 COPY --chown=user ./poetry.lock ${USER_WORKDIR}/poetry.lock
 COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
 
-RUN poetry install --sync --no-root --all-extras --compile --no-interaction
+RUN poetry install --sync --no-root --no-directory --all-extras --compile --no-interaction --no-plugins --no-cache
 
 COPY --chown=user ./src ${USER_WORKDIR}/src
 
