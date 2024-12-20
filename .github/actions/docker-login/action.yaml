@@ -18,10 +18,17 @@ runs:
   steps:
     - uses: ./.github/actions/dependencies
       with:
-        DEPENDENCIES: pass golang-docker-credential-helpers
+        DEPENDENCIES: gpg pass golang-docker-credential-helpers
+
+    - run: rm -fr ~/.password-store
+      shell: bash
 
     - run: |
-        rm -fr ~/.password-store
+        export GPG_TTY="$(tty)"
+        gpg -K
+      shell: bash
+
+    - run: |
         pass init ${{ inputs.DOCKERHUB_USER }}
         pass insert docker-credential-helpers/docker-pass-initialized-check
         pass show docker-credential-helpers/docker-pass-initialized-check
@@ -31,9 +38,6 @@ runs:
       shell: bash
 
     - run: echo '{"credsStore":"pass"}' > ${{ inputs.DOCKER_CONFIG }}
-      shell: bash
-
-    - run: cat ${{ inputs.DOCKER_CONFIG }}
       shell: bash
 
     - run: echo ${{ inputs.DOCKERHUB_TOKEN }} | docker login --username ${{ inputs.DOCKERHUB_USER }} --password-stdin
