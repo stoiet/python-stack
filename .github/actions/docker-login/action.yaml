@@ -8,6 +8,10 @@ inputs:
   DOCKERHUB_TOKEN:
     description: DOCKERHUB_TOKEN
     required: true
+  DOCKER_CONFIG:
+    description: DOCKER_CONFIG
+    required: true
+    default: ~/.docker/config.json
 
 runs:
   using: composite
@@ -17,7 +21,10 @@ runs:
     - run: docker logout
       shell: bash
 
-    - run: cat ~/.docker/config.json
+    - run: echo '{"credsStore":"pass"}' > ${{ inputs.DOCKER_CONFIG }}
+      shell: bash
+
+    - run: cat ${{ inputs.DOCKER_CONFIG }}
       shell: bash
 
     - run: echo ${{ inputs.DOCKERHUB_TOKEN }} | docker login --username ${{ inputs.DOCKERHUB_USER }} --password-stdin
