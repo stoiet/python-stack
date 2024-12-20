@@ -18,7 +18,7 @@ runs:
   steps:
     - uses: ./.github/actions/dependencies
       with:
-        DEPENDENCIES: gpg pass golang-docker-credential-helpers
+        DEPENDENCIES: pass golang-docker-credential-helpers
 
     - run: rm -fr ~/.password-store
       shell: bash
@@ -26,6 +26,7 @@ runs:
     - run: |
         export GPG_TTY="$(tty)"
         gpg -K
+        gpg --list-keys
       shell: bash
 
     - run: |
