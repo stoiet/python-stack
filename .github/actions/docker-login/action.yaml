@@ -12,6 +12,8 @@ inputs:
 runs:
   using: composite
   steps:
+    - uses: ./.github/actions/pass
+
     - run: cat ~/.docker/config.json
       shell: bash
 

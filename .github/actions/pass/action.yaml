@@ -1,0 +1,17 @@
+name: Install pass
+description: Install pass (the standard unix password manager)
+
+runs:
+  using: composite
+  steps:
+    - run: sudo apt-get update
+      shell: bash
+
+    - run: sudo apt-get upgrade --assume-yes
+      shell: bash
+
+    - run: sudo apt-get install --assume-yes --no-install-recommends --no-install-suggests pass
+      shell: bash
+
+    - run: sudo apt-get clean; sudo apt-get autoclean
+      shell: bash
