@@ -3,9 +3,9 @@ ARG DEBIAN_VERSION
 FROM python:${PYTHON_VERSION}-slim-${DEBIAN_VERSION} AS base
 
 ARG USER_NAME
-ENV USER_HOME /home/${USER_NAME}
-ENV USER_CONFIG ${USER_HOME}/.config
-ENV USER_WORKDIR ${USER_HOME}/workdir
+ENV USER_HOME=/home/${USER_NAME}
+ENV USER_CONFIG=${USER_HOME}/.config
+ENV USER_WORKDIR=${USER_HOME}/workdir
 
 ARG POETRY_VERSION
 RUN set -eux && \
@@ -50,6 +50,7 @@ COPY --chown=user ./pyproject.toml ${USER_WORKDIR}/pyproject.toml
 RUN poetry install --sync --no-root --no-directory --all-extras --compile --no-interaction --no-plugins --no-cache --only production
 
 COPY --chown=user ./src ${USER_WORKDIR}/src
+COPY --chown=user ./entrypoint.sh ${USER_WORKDIR}/entrypoint.sh
 
 RUN poetry run python -m compileall ${USER_WORKDIR}/src
 
@@ -58,8 +59,8 @@ ARG PYTHON_VERSION
 FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION} AS production
 
 ARG USER_NAME
-ENV USER_HOME /home/${USER_NAME}
-ENV USER_WORKDIR ${USER_HOME}/workdir
+ENV USER_HOME=/home/${USER_NAME}
+ENV USER_WORKDIR=${USER_HOME}/workdir
 
 ARG USER_NAME
 ARG USER_UID
@@ -73,7 +74,12 @@ RUN mkdir -p ${USER_WORKDIR}
 
 COPY --from=compiled --chown=user ${USER_WORKDIR}/.venv ${USER_WORKDIR}/.venv
 COPY --from=compiled --chown=user ${USER_WORKDIR}/src ${USER_WORKDIR}/src
+COPY --from=compiled --chown=user ${USER_WORKDIR}/entrypoint.sh ${USER_WORKDIR}/entrypoint.sh
 
 WORKDIR ${USER_WORKDIR}
 
-CMD . .venv/bin/activate && python -m uvicorn src.main:app
+RUN chmod +x ./entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
+
+CMD ["python", "-m", "uvicorn", "src.main:app"]
