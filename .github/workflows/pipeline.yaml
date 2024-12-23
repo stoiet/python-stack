@@ -47,6 +47,7 @@ jobs:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
+      - run: docker --version
       - run: make images
       - run: make scout
       - run: make dive
