@@ -20,13 +20,14 @@ jobs:
           show-progress: false
 
       - run: make build
+      - run: make images
 
       - uses: ./.github/actions/image-save
         with:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
-  check:
+  scout:
     runs-on: ubuntu-24.04
     needs: [build]
     steps:
@@ -47,16 +48,59 @@ jobs:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
-      - run: docker --version
-      - run: make images
       - run: make scout
+
+  dive:
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - uses: ./.github/actions/image-load
+        with:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+
       - run: make dive
+
+  grype:
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - uses: ./.github/actions/image-load
+        with:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+
       - run: make grype
+
+  trivy:
+    runs-on: ubuntu-24.04
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - uses: ./.github/actions/image-load
+        with:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+
       - run: make trivy
 
   clear:
     runs-on: ubuntu-24.04
-    needs: [check]
+    needs: [scout, dive, grype, trivy]
     if: ${{ always() }}
     permissions:
       actions: write
