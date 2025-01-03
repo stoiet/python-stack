@@ -37,8 +37,8 @@ jobs:
 
       - uses: ./.github/actions/docker-login
         with:
-          DOCKERHUB_USER: ${{ secrets.DOCKER_SCOUT_REGISTRY_USER }}
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKER_SCOUT_REGISTRY_TOKEN }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - uses: ./.github/actions/docker-scout
 
