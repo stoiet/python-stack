@@ -11,7 +11,7 @@ env:
   IMAGE_VERSION: ${{ github.sha }}
 
 jobs:
-  build:
+  build-image:
     runs-on: ubuntu-24.04
     permissions: {}
     timeout-minutes: 5
@@ -30,9 +30,9 @@ jobs:
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
 
-  scout:
+  check-scout:
     runs-on: ubuntu-24.04
-    needs: [build]
+    needs: [build-image]
     permissions: {}
     timeout-minutes: 5
 
@@ -42,12 +42,10 @@ jobs:
           persist-credentials: false
           show-progress: false
 
-      - uses: ./.github/actions/docker-login
+      - uses: ./.github/actions/docker-scout
         with:
           DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - uses: ./.github/actions/docker-scout
 
       - uses: ./.github/actions/image-load
         with:
@@ -56,9 +54,9 @@ jobs:
 
       - run: make scout
 
-  dive:
+  check-dive:
     runs-on: ubuntu-24.04
-    needs: [build]
+    needs: [build-image]
     permissions: {}
     timeout-minutes: 5
 
@@ -75,9 +73,9 @@ jobs:
 
       - run: make dive
 
-  grype:
+  check-grype:
     runs-on: ubuntu-24.04
-    needs: [build]
+    needs: [build-image]
     permissions: {}
     timeout-minutes: 5
 
@@ -94,9 +92,9 @@ jobs:
 
       - run: make grype
 
-  trivy:
+  check-trivy:
     runs-on: ubuntu-24.04
-    needs: [build]
+    needs: [build-image]
     permissions: {}
     timeout-minutes: 5
 
@@ -113,9 +111,9 @@ jobs:
 
       - run: make trivy
 
-  clear:
+  cleanup:
     runs-on: ubuntu-24.04
-    needs: [scout, dive, grype, trivy]
+    needs: [check-scout, check-dive, check-grype, check-trivy]
     if: ${{ always() }}
     permissions:
       actions: write

@@ -1,9 +1,22 @@
 name: Install docker scout
 description: Install docker scout
 
+inputs:
+  DOCKERHUB_USER:
+    description: DOCKERHUB_USER
+    required: true
+  DOCKERHUB_TOKEN:
+    description: DOCKERHUB_TOKEN
+    required: true
+
 runs:
   using: composite
   steps:
+    - uses: ./.github/actions/docker-login
+      with:
+        DOCKERHUB_USER: ${{ inputs.DOCKERHUB_USER }}
+        DOCKERHUB_TOKEN: ${{ inputs.DOCKERHUB_TOKEN }}
+
     - run: |
         sudo curl -fsSL https://raw.githubusercontent.com/docker/scout-cli/main/install.sh -o /tmp/install-scout.sh
         sh /tmp/install-scout.sh
