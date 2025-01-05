@@ -111,9 +111,34 @@ jobs:
 
       - run: make trivy
 
-  cleanup:
+  publish-image:
     runs-on: ubuntu-24.04
     needs: [check-scout, check-dive, check-grype, check-trivy]
+    permissions: {}
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - uses: ./.github/actions/image-load
+        with:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+
+      - uses: ./.github/actions/docker-publish
+        with:
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_REGISTRY: stoiet
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ env.IMAGE_VERSION }}
+
+  cleanup:
+    runs-on: ubuntu-24.04
+    needs: [publish-image]
     if: ${{ always() }}
     permissions:
       actions: write
