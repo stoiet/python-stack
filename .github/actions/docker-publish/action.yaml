@@ -1,0 +1,32 @@
+name: Publish docker image
+description: Publish docker image
+
+inputs:
+  DOCKERHUB_USER:
+    description: DOCKERHUB_USER
+    required: true
+  DOCKERHUB_TOKEN:
+    description: DOCKERHUB_TOKEN
+    required: true
+  DOCKERHUB_REGISTRY:
+    description: DOCKERHUB_REGISTRY
+    required: true
+  IMAGE_NAME:
+    description: IMAGE_NAME
+    required: true
+  IMAGE_VERSION:
+    description: IMAGE_VERSION
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/actions/docker-login
+      with:
+        DOCKERHUB_USER: ${{ inputs.DOCKERHUB_USER }}
+        DOCKERHUB_TOKEN: ${{ inputs.DOCKERHUB_TOKEN }}
+
+    - run: |
+        docker image tag ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }}
+        docker image push ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }}
+      shell: bash
