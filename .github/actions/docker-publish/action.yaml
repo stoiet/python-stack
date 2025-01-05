@@ -30,3 +30,8 @@ runs:
         docker image tag ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }}
         docker image push ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }}
       shell: bash
+
+    - run: |
+        docker image tag ${{ inputs.IMAGE_NAME }}:${{ inputs.IMAGE_VERSION }} ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:latest
+        docker image push ${{ inputs.DOCKERHUB_REGISTRY }}/${{ inputs.IMAGE_NAME }}:latest
+      shell: bash
